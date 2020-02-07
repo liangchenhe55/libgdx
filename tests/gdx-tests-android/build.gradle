@@ -15,9 +15,9 @@
  ******************************************************************************/
 
 buildscript {
-	dependencies {
-		classpath "com.android.tools.build:gradle:${versions.androidPlugin}"
-	}
+    dependencies {
+        classpath "com.android.tools.build:gradle:${versions.androidPlugin}"
+    }
 }
 
 apply plugin: "com.android.application"
@@ -32,6 +32,15 @@ dependencies {
 	implementation project(":backends:gdx-backend-android")
 	implementation libraries.android
 	implementation "androidx.multidex:multidex:${versions.multiDex}"
+
+	// for wear os watch face
+	// If use remote binary 'com.google.android.support:wearable:2.7.0', an error will occur while compiling:
+	// Program type already present. This issue may be related to AndroidX compatibility, android gradle plugin must be upgraded
+	// to 3.2.0+ to solve the problem. But I encountered some problems when upgrading the version, see:
+	// https://github.com/libgdx/libgdx/issues/6038
+	// Adding local dependencies is a workaround. Because 'libs' folder here is created by fetch.xml and has other uses, so I
+	// created a new directory called 'dependencies' to save the dependent jars.
+	implementation files('dependencies/wearable-2.7.0.jar')
 }
 
 android {
