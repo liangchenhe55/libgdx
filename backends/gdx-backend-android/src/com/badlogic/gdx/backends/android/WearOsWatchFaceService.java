@@ -155,7 +155,7 @@ public abstract class WearOsWatchFaceService extends WatchFaceService implements
 
 		audio = createAudio(this, config);
 
-		files = new AndroidFiles(getAssets(), this);
+		files = createFiles();
 		net = new AndroidNet(this, config);
 		clipboard = new AndroidClipboard(this);
 		this.listener = listener;
@@ -632,5 +632,11 @@ public abstract class WearOsWatchFaceService extends WatchFaceService implements
 	@Override
 	public AndroidInput createInput (Application activity, Context context, Object view, AndroidApplicationConfiguration config) {
 		return new DefaultAndroidInput(this, this, graphics.view, config);
+	}
+
+	private AndroidFiles createFiles() {
+		// added initialization of android local storage: /data/data/<app package>/files/
+		getFilesDir(); // workaround for Android bug #10515463
+		return new DefaultAndroidFiles(getAssets(), this, true);
 	}
 }
